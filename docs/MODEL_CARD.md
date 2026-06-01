@@ -53,9 +53,9 @@ training data.
 - Loss: Hungarian matching with box, GIoU, classification/presence, and
   one-to-many auxiliary matching terms
 
-The original complete and resolved configurations are retained in the project
-root. They preserve remote absolute paths and should be adapted before a new
-training run. See [training details](TRAINING.md) for the data pipeline,
+The original complete and resolved configurations are retained in `provenance/`.
+They preserve remote absolute paths and are historical records, not turnkey
+training commands. Adapt them before a new training run. See [training details](TRAINING.md) for the data pipeline,
 optimization schedule, loss construction, and evaluation protocol.
 
 ## Intended use and limitations

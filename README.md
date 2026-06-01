@@ -73,7 +73,7 @@ with tighter boxes than vanilla SAM 3.
 
 | Vanilla SAM 3 | Fine-tuned vehicle-parts model |
 | --- | --- |
-| ![Vanilla SAM 3 detections](results/sam3_base_8/image_0029.jpg) | ![Fine-tuned vehicle-parts detections](results/mps_8/image_0029.jpg) |
+| ![Vanilla SAM 3 detections](assets/benchmark/vanilla_sam3_image_0029.jpg) | ![Fine-tuned vehicle-parts detections](assets/benchmark/fine_tuned_vehicle_parts_image_0029.jpg) |
 
 These are **detection** visualizations, not segmentation masks. The training
 configuration sets `enable_segmentation: false`; a pixel-mask example would
@@ -99,11 +99,10 @@ limitations, and intended use.
 
 ```text
 .
-├── config.yaml                 # Original training configuration
-├── config_resolved.yaml        # Fully resolved original configuration
-├── run_mps.py                  # Apple Silicon MPS validation runner
+├── provenance/                 # Historical training configurations
+├── benchmark_mps.py            # Apple Silicon benchmark runner
 ├── eval_per_class.py           # COCO box evaluator with per-class AP/AP@50
-├── vendor/sam3/                # SAM 3 source adapted for image-only MPS use
+├── vendor/sam3/                # Vendored SAM 3 implementation; not project code
 ├── docs/                       # Model card, training, and compatibility notes
 └── results/                    # Local evaluation outputs; ignored by Git
 ```
@@ -120,7 +119,7 @@ training and historical evaluation used CUDA and bfloat16.
 ```sh
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install -r requirements-mps.txt
+.venv/bin/python -m pip install -r requirements-local-mps.txt
 ```
 
 Install a PyTorch/torchvision pair appropriate for your platform first if the
@@ -161,11 +160,11 @@ shasum -a 256 checkpoints/checkpoint.pt
 Run a deterministic eight-image validation smoke evaluation:
 
 ```sh
-.venv/bin/python run_mps.py \
+.venv/bin/python benchmark_mps.py \
   --checkpoint checkpoints/checkpoint.pt \
   --data-root data/parts \
   --limit 8 \
-  --output results/mps-smoke
+  --output results/local-benchmark
 ```
 
 Use `--limit 0` for every validation image. The runner writes COCO-format
@@ -189,6 +188,6 @@ truth/prediction visualizations to the output directory.
 - Original training preprocessing uses normalization mean/std `[0.5, 0.5,
   0.5]` and square 1008-pixel resize. It does not use ImageNet normalization.
 - MPS runs in float32 and uses compatibility substitutions for a few
-  CUDA-only operations. See [MPS compatibility](docs/MPS_COMPATIBILITY.md).
+  CUDA-only operations. See [local benchmark notes](docs/LOCAL_MPS_BENCHMARK.md).
 - Before publishing, review the applicable SAM 3 license, the dataset license,
   and any restrictions on distributing fine-tuned weights.

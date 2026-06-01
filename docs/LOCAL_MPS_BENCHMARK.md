@@ -1,6 +1,6 @@
-# Apple Silicon MPS compatibility
+# Local Apple Silicon benchmark
 
-`run_mps.py` is an image-only evaluation path for Apple Silicon. It was tested
+`benchmark_mps.py` is an image-only benchmark path for Apple Silicon. It was tested
 with PyTorch 2.6.0 and MPS available.
 
 The adapted source under `vendor/sam3` preserves the trained parameter values.

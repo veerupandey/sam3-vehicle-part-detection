@@ -67,8 +67,8 @@ threshold 0.4, alpha 0.3, and weight 2.0.
 
 The final `hitl_parts_v2` run resumed from an earlier `hitl_parts_full`
 checkpoint and saved a checkpoint every two epochs. The exact paths are
-preserved in `config_resolved.yaml` for provenance but must be changed for a
-new environment.
+preserved in `provenance/training_config_resolved.yaml` for provenance but must
+be changed for a new environment.
 
 ## Evaluation protocol
 
