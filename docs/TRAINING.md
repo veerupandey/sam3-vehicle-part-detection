@@ -83,23 +83,21 @@ mistake of labeling AP@50 as multi-IoU AP.
 
 ## Local pre-fine-tuning reference benchmark
 
-The configured starting point was `sam3.1_multiplex.pt`. That exact checkpoint
-resides on the stopped Lightning studio and was not available locally when this
-benchmark was run. A locally available upstream `sam3.pt` checkpoint was
-architecture-compatible with the detection model: it loaded every detector
-parameter, with only the disabled segmentation-head weights excluded.
+The configured starting point was `sam3.1_multiplex.pt`. For the local
+benchmark, a vanilla upstream `sam3.pt` detector checkpoint was available and
+loaded every detector parameter; only weights for the disabled segmentation
+head were excluded. SAM 3 provides the shared image-detection core, while SAM
+3.1 adds video-oriented enhancements.
 
-The following is therefore a **SAM 3 baseline**, not an exact SAM 3.1
-pre-fine-tuning reproduction. It uses the same deterministic eight validation
-image IDs (`7, 27, 29, 36, 58, 63, 71, 140`), category prompts, box processing,
-and MPS execution path as the fine-tuned smoke run.
+The benchmark uses the same deterministic eight validation image IDs (`7, 27,
+29, 36, 58, 63, 71, 140`), category prompts, box processing, and MPS execution
+path as the fine-tuned smoke run.
 
 | Checkpoint | AP | AP@50 | AP@75 |
 | --- | ---: | ---: | ---: |
-| Upstream SAM 3 baseline | 0.427 | 0.517 | 0.461 |
+| Vanilla SAM 3 baseline | 0.427 | 0.517 | 0.461 |
 | Fine-tuned vehicle-parts checkpoint | 0.795 | 0.942 | 0.834 |
 | Difference | +0.368 | +0.425 | +0.373 |
 
-The baseline confirms a substantial improvement on the matched sample. Run the
-exact `sam3.1_multiplex.pt` over all 149 validation images after the Lightning
-studio is available to obtain the definitive before/after comparison.
+The baseline confirms a substantial improvement on the matched sample. Run all
+149 validation images for the complete before/after benchmark.

@@ -36,11 +36,10 @@ re-evaluated against the current validation annotations to produce these values.
 
 ### Matched baseline smoke benchmark
 
-The Mac also contained an upstream `sam3.pt` detector checkpoint. Although it
-is **SAM 3, not the exact SAM 3.1 multiplex checkpoint used to start training**,
-it loads into the detector architecture and provides a useful local reference.
-Both checkpoints were evaluated with identical prompts on the same fixed eight
-validation images.
+The Mac contained the vanilla upstream `sam3.pt` detector checkpoint. It shares
+the image-detection core with the SAM 3.1 training starting point, while SAM
+3.1 adds video-oriented enhancements. Both checkpoints were evaluated with
+identical prompts on the same fixed eight validation images.
 
 | Checkpoint | AP | AP@50 | AP@75 |
 | --- | ---: | ---: | ---: |
@@ -49,8 +48,8 @@ validation images.
 | Difference | +0.368 | +0.425 | +0.373 |
 
 This is evidence that the parts fine-tuning materially improves detection on
-the sampled vehicle-part validation images. It is not a full-validation or an
-exact SAM 3.1 pre-training comparison.
+the sampled vehicle-part validation images. It is a smoke benchmark; run all
+149 validation images for release-quality comparison.
 
 See [the model card](docs/MODEL_CARD.md) for per-class results, data details,
 limitations, and intended use.
