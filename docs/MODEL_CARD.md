@@ -61,8 +61,10 @@ optimization schedule, loss construction, and evaluation protocol.
 ## Intended use and limitations
 
 Use the model to localize common exterior passenger-vehicle parts in still
-images. It does not determine left/right laterality, assess damage, identify
-vehicle make/model, or produce segmentation masks in this configuration.
+images. The result demonstrates that a SAM 3 image detector can be adapted to
+a focused domain with 849 labeled training images. It does not determine
+left/right laterality, assess damage, identify vehicle make/model, or produce
+segmentation masks in this configuration.
 
 Results may degrade for unusual vehicle types, occlusion, atypical views,
 heavy damage, low resolution, reflections, small parts, and classes with lower

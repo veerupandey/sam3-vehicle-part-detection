@@ -18,6 +18,20 @@ AdamW, 200 instance queries, and a batch size of one. Images were resized to a
 bounded box-noise augmentation. The image and text towers were both
 fine-tuned. See [training details](docs/TRAINING.md).
 
+## Data processing
+
+The source data is a COCO-format vehicle-parts dataset. Its 21 classes span
+body panels, doors, windows, wheels, lights, grille, mirrors, and license
+plates. The training split contains 849 images and 13,317 boxes; validation
+contains 149 images and 2,450 boxes.
+
+The pipeline filters crowds and empty targets, decodes source annotations,
+applies bounded box perturbation, scale-jitters each training image between 480
+and 1008 pixels, pads to a 1008 × 1008 square, and normalizes with channel
+mean/std `[0.5, 0.5, 0.5]`. Validation uses the same final resolution and
+normalization without training-time perturbations. See [training details](docs/TRAINING.md)
+for the complete configuration and loss setup.
+
 ## Results
 
 The supplied historical prediction file was re-evaluated against the current
@@ -50,6 +64,33 @@ identical prompts on the same fixed eight validation images.
 This is evidence that the parts fine-tuning materially improves detection on
 the sampled vehicle-part validation images. It is a smoke benchmark; run all
 149 validation images for release-quality comparison.
+
+## Visual comparison
+
+Each image below places ground truth on the left and model detections on the
+right. The fine-tuned model recovers the vehicle parts more consistently and
+with tighter boxes than vanilla SAM 3.
+
+| Vanilla SAM 3 | Fine-tuned vehicle-parts model |
+| --- | --- |
+| ![Vanilla SAM 3 detections](results/sam3_base_8/image_0029.jpg) | ![Fine-tuned vehicle-parts detections](results/mps_8/image_0029.jpg) |
+
+These are **detection** visualizations, not segmentation masks. The training
+configuration sets `enable_segmentation: false`; a pixel-mask example would
+require training or evaluating a segmentation-enabled checkpoint.
+
+## Conclusion
+
+This run shows that SAM 3's image-detection core can be fine-tuned effectively
+for a focused domain task with a relatively small labeled dataset: 849 training
+images achieved 0.731 AP and 0.917 AP@50 on the supplied 149-image validation
+split. The matched vanilla-versus-fine-tuned sample benchmark also shows a
+large improvement in part detection.
+
+This should be treated as a strong task-specific result rather than a claim of
+universal vehicle coverage. Performance still needs validation on the target
+vehicle mix, viewpoints, image quality, damage conditions, and deployment
+environment.
 
 See [the model card](docs/MODEL_CARD.md) for per-class results, data details,
 limitations, and intended use.
