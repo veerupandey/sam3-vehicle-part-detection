@@ -34,6 +34,24 @@ AP@50 is average precision at an IoU threshold of 0.50; it is not a simple
 percentage of correctly classified images. The supplied prediction file was
 re-evaluated against the current validation annotations to produce these values.
 
+### Matched baseline smoke benchmark
+
+The Mac also contained an upstream `sam3.pt` detector checkpoint. Although it
+is **SAM 3, not the exact SAM 3.1 multiplex checkpoint used to start training**,
+it loads into the detector architecture and provides a useful local reference.
+Both checkpoints were evaluated with identical prompts on the same fixed eight
+validation images.
+
+| Checkpoint | AP | AP@50 | AP@75 |
+| --- | ---: | ---: | ---: |
+| Local upstream SAM 3 baseline | 0.427 | 0.517 | 0.461 |
+| Fine-tuned vehicle-parts checkpoint | 0.795 | 0.942 | 0.834 |
+| Difference | +0.368 | +0.425 | +0.373 |
+
+This is evidence that the parts fine-tuning materially improves detection on
+the sampled vehicle-part validation images. It is not a full-validation or an
+exact SAM 3.1 pre-training comparison.
+
 See [the model card](docs/MODEL_CARD.md) for per-class results, data details,
 limitations, and intended use.
 

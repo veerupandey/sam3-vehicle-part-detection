@@ -80,3 +80,26 @@ recomputed from the saved prediction JSON and the transferred `val.json`.
 For a fresh evaluation, use `eval_per_class.py`. It reports both AP averaged
 over IoU thresholds 0.50:0.95 and AP@50, avoiding the earlier script's
 mistake of labeling AP@50 as multi-IoU AP.
+
+## Local pre-fine-tuning reference benchmark
+
+The configured starting point was `sam3.1_multiplex.pt`. That exact checkpoint
+resides on the stopped Lightning studio and was not available locally when this
+benchmark was run. A locally available upstream `sam3.pt` checkpoint was
+architecture-compatible with the detection model: it loaded every detector
+parameter, with only the disabled segmentation-head weights excluded.
+
+The following is therefore a **SAM 3 baseline**, not an exact SAM 3.1
+pre-fine-tuning reproduction. It uses the same deterministic eight validation
+image IDs (`7, 27, 29, 36, 58, 63, 71, 140`), category prompts, box processing,
+and MPS execution path as the fine-tuned smoke run.
+
+| Checkpoint | AP | AP@50 | AP@75 |
+| --- | ---: | ---: | ---: |
+| Upstream SAM 3 baseline | 0.427 | 0.517 | 0.461 |
+| Fine-tuned vehicle-parts checkpoint | 0.795 | 0.942 | 0.834 |
+| Difference | +0.368 | +0.425 | +0.373 |
+
+The baseline confirms a substantial improvement on the matched sample. Run the
+exact `sam3.1_multiplex.pt` over all 149 validation images after the Lightning
+studio is available to obtain the definitive before/after comparison.

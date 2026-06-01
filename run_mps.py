@@ -11,7 +11,9 @@ from sam3.model.box_ops import box_cxcywh_to_xyxy
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('--checkpoint', required=True, help='Path to checkpoint.pt')
+ p.add_argument('--checkpoint-label', default='unspecified', help='Recorded in output metadata')
  p.add_argument('--data-root', required=True, help='Directory containing val.json and val_imgs/')
+ p.add_argument('--allow-extra-weights', action='store_true', help='Allow checkpoint weights for disabled heads, such as segmentation')
  p.add_argument('--limit',type=int,default=8, help='Validation images; 0 evaluates all')
  p.add_argument('--output',default='results/mps', help='Directory for metrics and visualizations')
  a=p.parse_args()
@@ -25,8 +27,13 @@ def main():
  ckpt=torch.load(a.checkpoint,map_location='cpu',weights_only=True,mmap=True)
  weights=ckpt.get('model',ckpt)
  if any(k.startswith('detector.') for k in weights): weights={k.removeprefix('detector.'):v for k,v in weights.items() if k.startswith('detector.')}
- status=model.load_state_dict(weights,strict=True)
- metadata={'torch':torch.__version__,'device':'mps','dtype':'float32','load_status':str(status),'checkpoint_keys':list(ckpt),'epoch':ckpt.get('epoch'),'resolution':1008}
+ if a.allow_extra_weights:
+  status=model.load_state_dict(weights,strict=False)
+  if status.missing_keys:
+   raise RuntimeError(f'Checkpoint does not match the detector: {status.missing_keys}')
+ else:
+  status=model.load_state_dict(weights,strict=True)
+ metadata={'torch':torch.__version__,'device':'mps','dtype':'float32','checkpoint_label':a.checkpoint_label,'load_status':str(status),'checkpoint_keys':list(ckpt),'epoch':ckpt.get('epoch'),'resolution':1008}
  del weights,ckpt; gc.collect()
  # Preserve learned parameters; use upstream real-valued rotary arithmetic on MPS.
  for mod in model.modules():
