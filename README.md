@@ -41,10 +41,21 @@ annotation files, shuffles with seed 13, and assigns 15% to validation. Run
 `prepare_parts_dataset.py` to recreate the derived COCO files after downloading
 the source.
 
+## Reproducibility status
+
+The repository reproduces the derived dataset and evaluation procedure. The
+exact historical training run cannot be rerun from Git alone because the
+remote SAM 3.1 base checkpoint, fine-tuned checkpoint, and Lightning runtime
+are private or too large to distribute. Obtain those artifacts separately,
+then adapt the recorded configuration in `provenance/` to the new environment.
+Those YAML files document what ran; they are not portable launcher commands.
+
 ## Results
 
-The supplied historical prediction file was re-evaluated against the current
-COCO validation annotations (149 images):
+A prediction artifact from the remote run was re-evaluated against the current
+COCO validation annotations (149 images). That prediction artifact is not
+stored in Git; the scores below are recorded results, not a fresh run from the
+checkout:
 
 | Metric | Score |
 | --- | ---: |
@@ -54,8 +65,8 @@ COCO validation annotations (149 images):
 | AR@100 | 0.808 |
 
 AP@50 is average precision at an IoU threshold of 0.50; it is not a simple
-percentage of correctly classified images. The supplied prediction file was
-re-evaluated against the current validation annotations to produce these values.
+percentage of correctly classified images. The re-evaluation used the
+transferred `val.json` and the remote prediction artifact.
 
 ### Matched baseline smoke benchmark
 
@@ -146,6 +157,8 @@ Expected paths:
 
 ```text
 data/parts/
+├── train.json
+├── train_imgs/
 ├── val.json
 └── val_imgs/
     └── <vehicle images>
@@ -194,8 +207,7 @@ truth/prediction visualizations to the output directory.
 ## Notes for maintainers
 
 - Use category IDs from `val.json`; do not hard-code a separate taxonomy.
-- The actual transferred annotations contain 849 training images and 149
-  validation images. The earlier delivery README's 1,098/122 split is stale.
+- The derived annotations contain 849 training images and 149 validation images.
 - Original training preprocessing uses normalization mean/std `[0.5, 0.5,
   0.5]` and square 1008-pixel resize. It does not use ImageNet normalization.
 - MPS runs in float32 and uses compatibility substitutions for a few

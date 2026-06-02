@@ -14,8 +14,7 @@ Back-window, Back-windshield, Fender, Front-bumper, Front-door, Front-wheel,
 Front-window, Grille, Headlight, Hood, License-plate, Mirror, Quarter-panel,
 Rocker-panel, Roof, Tail-light, Trunk, and Windshield.
 
-Read identifiers from the supplied COCO JSON. The IDs in an earlier delivery
-document did not match the transferred annotations.
+Use the category IDs in the COCO JSON as the authoritative taxonomy.
 
 ## Evaluation
 
