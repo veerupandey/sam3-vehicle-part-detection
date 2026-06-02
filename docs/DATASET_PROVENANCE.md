@@ -29,9 +29,9 @@ classes and supplies boxes used by the SAM 3 fine-tuning run. Segmentation is
 disabled in the saved training configuration, so source polygons were not used
 as mask supervision in this run.
 
-The project COCO files identify themselves as `SAM3 vehicle parts`, version `1.0`, and
-do not retain licence metadata in their `licenses` field. The original Kaggle
-source remains the licence authority.
+The project COCO files identify themselves as `SAM3 vehicle parts`, version
+`1.0`, and do not retain licence metadata in their `licenses` field. The
+original Kaggle source remains the licence authority.
 
 ## Data preparation and split
 
