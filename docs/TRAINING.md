@@ -70,7 +70,9 @@ threshold 0.4, alpha 0.3, and weight 2.0.
 The final `hitl_parts_v2` run resumed from an earlier `hitl_parts_full`
 checkpoint and saved a checkpoint every two epochs. The exact paths are
 preserved in `provenance/training_config_resolved.yaml` for provenance but must
-be changed for a new environment.
+be changed for a new environment. The recovered remote preparation script
+used a sorted annotation list, `random.Random(13)`, and a 15% validation slice;
+the same procedure is available as `prepare_parts_dataset.py` in this repo.
 
 ## Evaluation protocol
 

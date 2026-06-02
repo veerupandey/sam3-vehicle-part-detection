@@ -33,15 +33,23 @@ The project COCO files identify themselves as `SAM3 vehicle parts`, version `1.0
 do not retain licence metadata in their `licenses` field. The original Kaggle
 source remains the licence authority.
 
-## Data preparation boundary
+## Data preparation and split
 
-The final train/validation COCO files and image folders were already present
-on the Lightning training host. The records establish the source dataset,
-version, derived annotation format, class taxonomy, and final split sizes, but
-the script that produced the 849/149 split was not included in the delivered
-artifacts. This repository therefore treats that split as a recorded training
-artifact rather than claiming it can recreate the exact partition from only the
-source download.
+The original Lightning training script was recovered from the remote artifact
+directory. It confirms an upstream folder-name swap: `Car damages dataset`
+contains the 998 part-annotated images, while `Car parts dataset` contains the
+814 damage-annotated images. The script selected the former, sorted its
+Supervisely annotation filenames, shuffled their indices with
+`random.Random(13)`, and assigned the first `int(998 * 0.15) = 149` records to
+validation. The remaining 849 records became training data. This is a random,
+non-stratified split.
+
+`prepare_parts_dataset.py` is the cleaned, standalone implementation of that
+conversion. It converts Supervisely polygons to COCO instances while retaining
+the 21 part classes and can copy the corresponding images. Its default seed and
+validation fraction match the recovered training script. Exact filenames still
+depend on the downloaded Kaggle release, so verify the resulting counts before
+training.
 
 An SHA-256 content audit of the delivered files found no exact image duplicate
 between train and validation. It does not rule out related images of the same
@@ -51,6 +59,10 @@ vehicle or adjacent captures.
 
 Download the source from its Kaggle page using an account and method permitted
 by Kaggle’s terms. Keep the original source material separate from this
-repository; `data/` is ignored by Git. After downloading, reproduce the
-project’s COCO derivative and split only if the missing conversion/split script
-is recovered or replaced with a documented new procedure.
+repository; `data/` is ignored by Git. To recreate the derived dataset:
+
+```sh
+python prepare_parts_dataset.py \
+  --source-root /path/to/car-parts-and-car-damages \
+  --output-root data/parts
+```

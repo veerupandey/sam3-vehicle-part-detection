@@ -35,6 +35,12 @@ normalization without training-time perturbations. See [training details](docs/T
 for the complete configuration and loss setup, and [dataset provenance](docs/DATASET_PROVENANCE.md)
 for source, licence, and conversion details.
 
+The source release has a misleading folder-name swap: `Car damages dataset`
+holds the part polygons used here. The recovered split procedure sorts the
+annotation files, shuffles with seed 13, and assigns 15% to validation. Run
+`prepare_parts_dataset.py` to recreate the derived COCO files after downloading
+the source.
+
 ## Results
 
 The supplied historical prediction file was re-evaluated against the current
@@ -104,6 +110,7 @@ limitations, and intended use.
 .
 ├── provenance/                 # Historical training configurations
 ├── docs/DATASET_PROVENANCE.md  # Dataset source and derived-data boundary
+├── prepare_parts_dataset.py    # Supervisely-to-COCO preparation utility
 ├── benchmark_mps.py            # Apple Silicon benchmark runner
 ├── eval_per_class.py           # COCO box evaluator with per-class AP/AP@50
 ├── vendor/sam3/                # Vendored SAM 3 implementation; not project code
