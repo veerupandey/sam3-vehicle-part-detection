@@ -9,8 +9,10 @@ supervised output is bounding boxes rather than masks.
 
 ## Dataset
 
-The training source is the Humans-in-the-Loop car-parts/damages dataset in
-COCO format. The transferred annotation files contain the following:
+The training source is the Humans in the Loop Car Parts and Car Damages dataset
+downloaded through KaggleHub at version 2. The transferred annotation files are
+a derived COCO box-detection representation. See [dataset provenance](DATASET_PROVENANCE.md)
+for the source dataset, licensing, and known conversion details. They contain:
 
 | Split | Images | Box instances | Categories |
 | --- | ---: | ---: | ---: |

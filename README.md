@@ -20,17 +20,20 @@ fine-tuned. See [training details](docs/TRAINING.md).
 
 ## Data processing
 
-The source data is a COCO-format vehicle-parts dataset. Its 21 classes span
-body panels, doors, windows, wheels, lights, grille, mirrors, and license
-plates. The training split contains 849 images and 13,317 boxes; validation
-contains 149 images and 2,450 boxes.
+The source is the Humans in the Loop **Car Parts and Car Damages** dataset,
+downloaded through KaggleHub from dataset version 2. This project uses the 998
+car-part images and excludes the source dataset’s damage-only images. Its 21
+classes span body panels, doors, windows, wheels, lights, grille, mirrors, and
+license plates. The derived training split contains 849 images and 13,317
+boxes; validation contains 149 images and 2,450 boxes.
 
 The pipeline filters crowds and empty targets, decodes source annotations,
 applies bounded box perturbation, scale-jitters each training image between 480
 and 1008 pixels, pads to a 1008 × 1008 square, and normalizes with channel
 mean/std `[0.5, 0.5, 0.5]`. Validation uses the same final resolution and
 normalization without training-time perturbations. See [training details](docs/TRAINING.md)
-for the complete configuration and loss setup.
+for the complete configuration and loss setup, and [dataset provenance](docs/DATASET_PROVENANCE.md)
+for source, licence, and conversion details.
 
 ## Results
 
@@ -100,6 +103,7 @@ limitations, and intended use.
 ```text
 .
 ├── provenance/                 # Historical training configurations
+├── docs/DATASET_PROVENANCE.md  # Dataset source and derived-data boundary
 ├── benchmark_mps.py            # Apple Silicon benchmark runner
 ├── eval_per_class.py           # COCO box evaluator with per-class AP/AP@50
 ├── vendor/sam3/                # Vendored SAM 3 implementation; not project code
