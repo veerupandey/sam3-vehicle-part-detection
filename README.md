@@ -122,6 +122,7 @@ limitations, and intended use.
 ├── provenance/                 # Historical training configurations
 ├── docs/DATASET_PROVENANCE.md  # Dataset source and derived-data boundary
 ├── prepare_parts_dataset.py    # Supervisely-to-COCO preparation utility
+├── make_inference_checkpoint.py # Strip resume state from a training checkpoint
 ├── benchmark_mps.py            # Apple Silicon benchmark runner
 ├── eval_per_class.py           # COCO box evaluator with per-class AP/AP@50
 ├── vendor/sam3/                # Vendored SAM 3 implementation; not project code
@@ -167,8 +168,24 @@ data/parts/
     └── <vehicle images>
 
 checkpoints/
-└── checkpoint.pt               # fine-tuned detector, downloaded separately
+└── checkpoint.pt               # full fine-tuning checkpoint, downloaded separately
 ```
+
+### Inference-only checkpoint
+
+The full checkpoint is 9.3 GiB because it includes 3.36 GiB of model tensors
+and 6.65 GiB of AdamW optimizer state. For inference, strip the resume state:
+
+```sh
+.venv/bin/python make_inference_checkpoint.py \
+  checkpoint.download.pt checkpoints/checkpoint.inference.pt
+shasum -a 256 checkpoints/checkpoint.inference.pt
+```
+
+The resulting artifact is about 3.1 GiB and loads with the same benchmark. It
+cannot resume training because optimizer, scaler, epoch, and scheduler state
+are intentionally absent. It is still above GitHub Free/Pro's 2 GiB LFS limit;
+GitHub Team supports up to 4 GiB per LFS file.
 
 The verified checkpoint SHA-256 is:
 
@@ -187,7 +204,7 @@ checkpoint explicitly:
 
 ```sh
 git lfs install
-git add checkpoints/checkpoint.pt
+git add -f checkpoints/checkpoint.pt
 git commit -m "Add fine-tuned checkpoint via Git LFS"
 git lfs ls-files
 ```
