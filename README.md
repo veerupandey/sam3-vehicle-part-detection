@@ -123,6 +123,8 @@ limitations, and intended use.
 ├── docs/DATASET_PROVENANCE.md  # Dataset source and derived-data boundary
 ├── prepare_parts_dataset.py    # Supervisely-to-COCO preparation utility
 ├── make_inference_checkpoint.py # Strip resume state from a training checkpoint
+├── train_parts.py              # Training launcher for the pinned SAM 3 source
+├── requirements-training.txt   # Training-only Python dependencies
 ├── benchmark_mps.py            # Apple Silicon benchmark runner
 ├── eval_per_class.py           # COCO box evaluator with per-class AP/AP@50
 ├── vendor/sam3/                # Vendored SAM 3 implementation; not project code
@@ -147,6 +149,33 @@ python3 -m venv .venv
 
 Install a PyTorch/torchvision pair appropriate for your platform first if the
 requirements resolver does not select one automatically.
+
+## Training
+
+The training entry point is [`train_parts.py`](train_parts.py), a thin wrapper
+around the pinned launcher at [`vendor/sam3/train/train.py`](vendor/sam3/train/train.py).
+The historical recipe is [`vendor/sam3/train/hitl_parts_v2.yaml`](vendor/sam3/train/hitl_parts_v2.yaml).
+
+Install the training dependencies and prepare `data/parts`:
+
+```sh
+.venv/bin/python -m pip install -r requirements-training.txt
+```
+
+Then copy
+that YAML, replace its base/resume checkpoint and output paths, then launch one
+GPU locally:
+
+```sh
+PYTHONPATH=vendor .venv/bin/python train_parts.py \
+  --config hitl_parts_v2 \
+  --use-cluster 0 \
+  --num-gpus 1
+```
+
+The original remote run used `--use-cluster 1` through Submitit/Slurm. The
+resolved YAML in `provenance/` preserves the remote run configuration but its
+Lightning paths must be replaced before reuse.
 
 ## Data and checkpoint setup
 

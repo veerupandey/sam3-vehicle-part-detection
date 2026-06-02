@@ -7,6 +7,24 @@ For each image and category prompt, the model predicts up to 200 candidate
 instances. The saved configuration disables the segmentation head, so the
 supervised output is bounding boxes rather than masks.
 
+## Training entry point
+
+Run [`train_parts.py`](../train_parts.py), which loads the pinned launcher from
+[`vendor/sam3/train/train.py`](../vendor/sam3/train/train.py). The historical
+recipe is [`vendor/sam3/train/hitl_parts_v2.yaml`](../vendor/sam3/train/hitl_parts_v2.yaml).
+Use a copied config with local paths for a new run:
+
+```sh
+PYTHONPATH=vendor .venv/bin/python train_parts.py \
+  --config hitl_parts_v2 \
+  --use-cluster 0 \
+  --num-gpus 1
+```
+
+The original base and resume checkpoint paths point to the Lightning session
+and must be replaced. The resolved YAML is a provenance record, not an
+executable command without those artifacts.
+
 ## Dataset
 
 The training source is the Humans in the Loop Car Parts and Car Damages dataset
