@@ -151,7 +151,10 @@ requirements resolver does not select one automatically.
 
 The repository does not distribute either the dataset or the 10,009,567,404
 byte checkpoint. Obtain them under the licences and permissions that apply to
-your organization.
+your organization. Git LFS is configured for deliberate checkpoint additions,
+but this checkpoint is 9.3 GiB and therefore exceeds GitHub's per-file LFS
+limit on every plan. Keep it in object storage or a model registry for GitHub
+distribution; do not commit it as one GitHub LFS object.
 
 Expected paths:
 
@@ -164,7 +167,7 @@ data/parts/
     └── <vehicle images>
 
 checkpoints/
-└── checkpoint.pt
+└── checkpoint.pt               # fine-tuned detector, downloaded separately
 ```
 
 The verified checkpoint SHA-256 is:
@@ -178,6 +181,19 @@ Verify it after download:
 ```sh
 shasum -a 256 checkpoints/checkpoint.pt
 ```
+
+If using a private Git LFS server that supports a 9.3 GiB object, add the
+checkpoint explicitly:
+
+```sh
+git lfs install
+git add checkpoints/checkpoint.pt
+git commit -m "Add fine-tuned checkpoint via Git LFS"
+git lfs ls-files
+```
+
+GitHub users should publish this checkpoint as a release asset or through a
+model registry instead; the per-file GitHub LFS limit is lower than this file.
 
 ### Run MPS evaluation
 

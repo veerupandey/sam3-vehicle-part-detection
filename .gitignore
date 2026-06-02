@@ -4,8 +4,12 @@ __pycache__/
 *.py[cod]
 
 # Large, local-only artifacts
-checkpoints/
+# Model weights are ignored by default; files under checkpoints/ may be added
+# deliberately and are configured for Git LFS in .gitattributes.
 checkpoint*.pt
+checkpoints/*
+!checkpoints/
+!checkpoints/*.pt
 data/
 remote_reference/
 results/

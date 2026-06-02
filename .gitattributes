@@ -1,0 +1,2 @@
+# Large model weights use Git LFS when the selected remote supports them.
+checkpoints/*.pt filter=lfs diff=lfs merge=lfs -text
